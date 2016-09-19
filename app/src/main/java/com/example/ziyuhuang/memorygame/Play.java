@@ -43,7 +43,8 @@ public class Play extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        loadPreference();
+//        loadPreference();
+        clearPreference();
         btns = new ImageButton[20];
         images = new ArrayList<>();
         loadImages();
@@ -77,6 +78,14 @@ public class Play extends AppCompatActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
+
+    public void clearPreference(){
+        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor prefsEditor = prefs.edit();
+        prefsEditor.clear();
+        prefsEditor.commit();
+    }
+
 
     public void savePreference() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);

@@ -19,6 +19,7 @@
         android:layout_centerHorizontal="true" />
 
     <Button
+        android:layout_margin="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play"
@@ -30,6 +31,7 @@
         />
 
     <Button
+        android:layout_margin="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="RULES"
