@@ -43,7 +43,7 @@ public class Play extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-//        loadPreference();
+        loadPreference();
         btns = new ImageButton[20];
         images = new ArrayList<>();
         loadImages();
@@ -88,12 +88,9 @@ public class Play extends AppCompatActivity {
 
     private void loadPreference() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        count = prefs.getInt("count", -1);
-        points = prefs.getInt("points", -1);
+        count = prefs.getInt("count", 0);
+        points = prefs.getInt("points", 0);
         updatePoints();
-        Set<Integer> set = new HashSet<>();
-
-
     }
 
     @Override
