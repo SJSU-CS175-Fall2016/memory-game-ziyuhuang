@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -118,16 +120,25 @@ public class Play extends AppCompatActivity {
             count++;
         if (count == 1) {
             pre_button = btns[btn_num];
+            YoYo.with(Techniques.Wobble)
+                    .duration(2000)
+                    .playOn(btns[btn_num]);
         }
         if (count == 2) {
             count = 0;
             if (btns[btn_num].getTag().equals(pre_button.getTag())) {
+                YoYo.with(Techniques.Wobble)
+                        .duration(2000)
+                        .playOn(btns[btn_num]);
                 btns[btn_num].setVisibility(View.INVISIBLE);
                 pre_button.setVisibility(View.INVISIBLE);
                 points++;
                 updatePoints();
             } else {
                 btns[btn_num].setImageResource(R.drawable.cover);
+                YoYo.with(Techniques.Wobble)
+                        .duration(2000)
+                        .playOn(btns[btn_num]);
                 pre_button.setImageResource(R.drawable.cover);
                 pre_button = null;
             }
