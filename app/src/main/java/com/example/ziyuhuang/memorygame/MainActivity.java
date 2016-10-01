@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void rulesPage(View view){
-//        Intent intent = new Intent(this, Rules.class);
-//        startActivity(intent);
+
         textView.setVisibility(View.GONE);
         playButton.setVisibility(View.GONE);
         rulesButton.setVisibility(View.GONE);
