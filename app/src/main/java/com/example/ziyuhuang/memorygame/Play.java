@@ -53,8 +53,7 @@ public class Play extends AppCompatActivity {
     //record the amounts of images are gone.
     int image_gone_counter;
 
-    //map to store the deleted values
-//    Map<Integer, Integer> map;
+    //list to store the matched pictures
     ArrayList<Integer> list;
 
     //store 20 image buttons
@@ -328,7 +327,6 @@ public class Play extends AppCompatActivity {
             btns[i].setVisibility(View.VISIBLE);
             btns[i].setImageResource(R.drawable.cover);
 
-//            btns[i].setImageResource(btn_list.get(i));
         }
         for(int i = 0; i < image_gone_counter; i++){
             btns[20 - image_gone_counter + i].setVisibility(View.INVISIBLE);
