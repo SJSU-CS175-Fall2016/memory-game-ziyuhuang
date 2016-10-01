@@ -14,22 +14,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 
 public class TestFragment extends Fragment {
 
-    Button playButton;
-    Button rulesButton;
-    TextView textView;
+    @BindView(R.id.play) Button playButton;
+    @BindView(R.id.rules) Button rulesButton;
+    @BindView(R.id.textView) TextView textView;
 
-
-    Button exit_rules;
+    @BindView(R.id.exit_rules) Button exit_rules;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test, container, false);
-    }
 
+        View view =  inflater.inflate(R.layout.fragment_test, container, false);
+        ButterKnife.bind(view);
+        return view;
+    }
+//
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -37,8 +43,8 @@ public class TestFragment extends Fragment {
         playButton = (Button) getActivity().findViewById(R.id.play);
         rulesButton = (Button) getActivity().findViewById(R.id.rules);
         textView = (TextView) getActivity().findViewById(R.id.textView);
-
         exit_rules = (Button) getActivity().findViewById(R.id.exit_rules);
+
         exit_rules.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

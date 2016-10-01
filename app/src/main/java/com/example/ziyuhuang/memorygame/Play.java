@@ -1,10 +1,15 @@
 package com.example.ziyuhuang.memorygame;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -16,41 +21,73 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+
+import butterknife.BindView;
 
 public class Play extends AppCompatActivity {
 
+    class Pair{
+        ImageButton pre_button;
+        int button_location;
+
+        Pair(ImageButton btn, int location){
+            pre_button = btn;
+            button_location = location;
+        }
+    }
+
     ArrayList<Integer> images;
     ArrayList<Integer> btn_list = new ArrayList<>();
-    ImageButton pre_button;
+    Pair pre_btn;
+//    ImageButton pre_button;
 
     //count if if two button are flip
     int count = 0;
 
+    //record the amounts of images are gone.
+    int image_gone_counter;
+
+    //map to store the deleted values
+//    Map<Integer, Integer> map;
+    ArrayList<Integer> list;
+
     //store 20 image buttons
     ImageButton[] btns;
 
+//    @BindView(R.id.imageButton1) ImageButton btns[0];
+
     //points to record how many pairs of image matches
     int points;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-//        loadPreference();
-        clearPreference();
         btns = new ImageButton[20];
         images = new ArrayList<>();
+        image_gone_counter = 0;
         loadImages();
         getImagesToButton();
+
+        for(int i = 0; i < 20; i++){
+            Log.v("id", btn_list.get(i).toString());
+        }
+
+        pre_btn = null;
+
+
+//        map = new HashMap<>();
+        list = new ArrayList<>();
+//        for(int i = 0; i < 20; i++){
+//            list.add(btn_list.get(i));
+//        }
 
         btns[0] = (ImageButton) findViewById(R.id.imageButton1);
         btns[1] = (ImageButton) findViewById(R.id.imageButton2);
@@ -76,62 +113,36 @@ public class Play extends AppCompatActivity {
         for (int i = 0; i < 20; i++) {
             btns[i].setVisibility(View.VISIBLE);
         }
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
-    }
-
-    public void clearPreference(){
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.clear();
-        prefsEditor.commit();
-    }
-
-
-    public void savePreference() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putInt("count", count);
-        prefsEditor.putInt("points", points);
-        prefsEditor.commit();
-    }
-
-    private void loadPreference() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-        count = prefs.getInt("count", 0);
-        points = prefs.getInt("points", 0);
-        updatePoints();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        savePreference();
     }
 
     public void check(String str) {
         String btnNum = str.substring(11);
         int btn_num = Integer.parseInt(btnNum) - 1;
         btns[btn_num].setImageResource(btn_list.get(btn_num));
+        Log.v("button is pressed", String.valueOf(btn_num));
         btns[btn_num].setTag(btn_list.get(btn_num));
 
-        if (btns[btn_num] != pre_button)
+        if (pre_btn == null || btns[btn_num] != pre_btn.pre_button)
             count++;
         if (count == 1) {
-            pre_button = btns[btn_num];
+            pre_btn = new Pair(btns[btn_num], btn_num);
             YoYo.with(Techniques.Wobble)
                     .duration(2000)
                     .playOn(btns[btn_num]);
         }
         if (count == 2) {
             count = 0;
-            if (btns[btn_num].getTag().equals(pre_button.getTag())) {
+            if (btns[btn_num].getTag().equals(pre_btn.pre_button.getTag())) {
                 YoYo.with(Techniques.Wobble)
                         .duration(2000)
                         .playOn(btns[btn_num]);
                 btns[btn_num].setVisibility(View.INVISIBLE);
-                pre_button.setVisibility(View.INVISIBLE);
+                pre_btn.pre_button.setVisibility(View.INVISIBLE);
+
+                list.add(btn_list.get(btn_num));
+                list.add(btn_list.get(pre_btn.button_location));
+
+                image_gone_counter += 2;
                 points++;
                 updatePoints();
             } else {
@@ -139,8 +150,8 @@ public class Play extends AppCompatActivity {
                 YoYo.with(Techniques.Wobble)
                         .duration(2000)
                         .playOn(btns[btn_num]);
-                pre_button.setImageResource(R.drawable.cover);
-                pre_button = null;
+                pre_btn.pre_button.setImageResource(R.drawable.cover);
+                pre_btn.pre_button = null;
             }
         }
     }
@@ -273,6 +284,56 @@ public class Play extends AppCompatActivity {
         Collections.shuffle(btn_list);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.new_game:
+                finish();
+                Intent intent = new Intent(this, Play.class);
+                startActivity(intent);
+                return true;
+            case R.id.shuffle:
+                count = 0;
+                pre_btn = null;
+                shuffleGame();
+        }
+
+        return true;
+    }
+
+    public void shuffleGame(){
+
+        for(int i = 0; i < list.size(); i++){
+            btn_list.remove(new Integer(list.get(i)));
+        }
+
+        list = new ArrayList<>();
+        Log.d("size of btnlist", String.valueOf(btn_list.size()));
+        Collections.shuffle(btn_list);
+
+        reArrangeButtonView();
+    }
+
+    public void reArrangeButtonView(){
+        for(int i = 0; i < 20 - image_gone_counter; i++){
+            btns[i].setVisibility(View.VISIBLE);
+            btns[i].setImageResource(R.drawable.cover);
+
+//            btns[i].setImageResource(btn_list.get(i));
+        }
+        for(int i = 0; i < image_gone_counter; i++){
+            btns[20 - image_gone_counter + i].setVisibility(View.INVISIBLE);
+        }
+
+    }
 
 }
