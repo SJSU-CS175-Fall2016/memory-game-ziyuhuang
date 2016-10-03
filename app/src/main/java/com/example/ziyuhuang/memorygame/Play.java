@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 
 public class Play extends AppCompatActivity {
@@ -59,7 +60,6 @@ public class Play extends AppCompatActivity {
     //store 20 image buttons
     ImageButton[] btns;
 
-//    @BindView(R.id.imageButton1) ImageButton btns[0];
 
     //points to record how many pairs of image matches
     int points;
@@ -84,10 +84,7 @@ public class Play extends AppCompatActivity {
 
 //        map = new HashMap<>();
         list = new ArrayList<>();
-//        for(int i = 0; i < 20; i++){
-//            list.add(btn_list.get(i));
-//        }
-
+        
         btns[0] = (ImageButton) findViewById(R.id.imageButton1);
         btns[1] = (ImageButton) findViewById(R.id.imageButton2);
         btns[2] = (ImageButton) findViewById(R.id.imageButton3);

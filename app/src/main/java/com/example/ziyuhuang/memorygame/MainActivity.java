@@ -15,7 +15,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TestFragment.ViewChangeListener{
 
     @BindView(R.id.play) Button playButton;
     @BindView(R.id.rules) Button rulesButton;
@@ -28,8 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void rulesPage(View view){
-//        Intent intent = new Intent(this, Rules.class);
-//        startActivity(intent);
+
         textView.setVisibility(View.GONE);
         playButton.setVisibility(View.GONE);
         rulesButton.setVisibility(View.GONE);
@@ -43,5 +42,12 @@ public class MainActivity extends AppCompatActivity {
     public void playPage(View view){
         Intent intent = new Intent(this,Play.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void showButton() {
+        textView.setVisibility(View.VISIBLE);
+        playButton.setVisibility(View.VISIBLE);
+        rulesButton.setVisibility(View.VISIBLE);
     }
 }

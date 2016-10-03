@@ -1,6 +1,8 @@
 package com.example.ziyuhuang.memorygame;
 
+import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,52 +14,55 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 
 public class TestFragment extends Fragment {
 
-    @BindView(R.id.play) Button playButton;
-    @BindView(R.id.rules) Button rulesButton;
-    @BindView(R.id.textView) TextView textView;
+    @BindView(R.id.exit) Button exit_rules;
 
-    @BindView(R.id.exit_rules) Button exit_rules;
+    private Unbinder unbinder;
+
+    ViewChangeListener viewChangeListener;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
         View view =  inflater.inflate(R.layout.fragment_test, container, false);
-        ButterKnife.bind(view);
+        unbinder = ButterKnife.bind(this,view);
         return view;
     }
-//
+
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        viewChangeListener = (ViewChangeListener) context;
+    }
 
-        playButton = (Button) getActivity().findViewById(R.id.play);
-        rulesButton = (Button) getActivity().findViewById(R.id.rules);
-        textView = (TextView) getActivity().findViewById(R.id.textView);
-        exit_rules = (Button) getActivity().findViewById(R.id.exit_rules);
+    @OnClick(R.id.exit)
+    public void exitRules(View view){
+        Log.v("testing", "clicked");
+        Fragment fragment = getFragmentManager().findFragmentByTag("rules_fragment");
+        if(fragment != null){
+            getFragmentManager().beginTransaction().remove(fragment).commit();
+        }
 
-        exit_rules.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        viewChangeListener.showButton();
+    }
 
-               Fragment fragment = getFragmentManager().findFragmentByTag("rules_fragment");
-                if(fragment != null){
-                    getFragmentManager().beginTransaction().remove(fragment).commit();
-                }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 
-                textView.setVisibility(View.VISIBLE);
-                playButton.setVisibility(View.VISIBLE);
-                rulesButton.setVisibility(View.VISIBLE);
-            }
-        });
+    public interface ViewChangeListener{
+        public void showButton();
     }
 }
